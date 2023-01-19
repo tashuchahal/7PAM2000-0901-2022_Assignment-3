@@ -101,3 +101,92 @@ avg_gas_elec = df[df["Indicator Name"] == 'Electricity production from natural g
 avg_hyd_elec = df[df["Indicator Name"] == 'Electricity production from hydroelectric sources (% of total)'].drop(["Indicator Name"], axis=1).set_index("Country Name").mean(axis=1)
 avg_coal_elec = df[df["Indicator Name"] == 'Electricity production from coal sources (% of total)'].drop(["Indicator Name"], axis=1).set_index("Country Name").mean(axis=1)
 avg_renew_elec = df[df["Indicator Name"] == 'Renewable electricity output (% of total electricity output)'].drop(["Indicator Name"], axis=1).set_index("Country Name").mean(axis=1)
+
+
+# In[8]:
+
+
+avg_population.sort_values(ascending=False)[:30].plot(kind="bar", figsize=(15, 6))
+plt.show()
+
+
+# In[9]:
+
+
+avg_renew_elec.sort_values(ascending=False)[:30].plot(kind="bar", figsize=(15, 6))
+plt.title("Renewable", fontsize=24)
+plt.show()
+
+
+# In[10]:
+
+
+avg_coal_elec.sort_values(ascending=False)[:15].plot(kind="bar", figsize=(15, 6))
+plt.title("Coal", fontsize=24)
+plt.show()
+
+
+# In[11]:
+
+
+avg_gas_elec.sort_values(ascending=False)[:15].plot(kind="bar", figsize=(15, 6))
+plt.title("Gass", fontsize=24)
+plt.show()
+
+
+# In[12]:
+
+
+avg_hyd_elec.sort_values(ascending=False)[:15].plot(kind="bar", figsize=(15, 6))
+plt.title("HydroPower", fontsize=24)
+plt.show()
+
+
+# In[13]:
+
+
+avg_nuc_elec.sort_values(ascending=False)[:15].plot(kind="bar", figsize=(15, 6))
+plt.title("Nuclear", fontsize=24)
+plt.show()
+
+
+# In[14]:
+
+
+avg_oil_elec.sort_values(ascending=False)[:15].plot(kind="bar", figsize=(15, 6))
+plt.title("Oil", fontsize=24)
+plt.show()
+
+
+# In[ ]:
+
+
+
+
+
+# In[15]:
+
+
+temp = pd.DataFrame(avg_coal_elec)
+temp.columns = ["Coal"]
+temp["Gass"] = avg_gas_elec
+temp["Hydro"] = avg_gas_elec
+temp["Nueclear"] = avg_gas_elec
+temp["Oil"] = avg_gas_elec
+temp["renew"] = avg_renew_elec
+temp = temp.sort_values(by=["Coal", "Gass", "Hydro", "Nueclear", "Oil"], ascending=False)
+
+
+# In[16]:
+
+
+temp.head(30).plot(kind="bar", figsize=(18, 6))
+plt.show()
+
+
+# In[17]:
+
+
+df[df["Indicator Name"] == "Population, total"].drop("Indicator Name", axis=1).set_index("Country Name").sort_values("2021").tail(5).T.plot(kind="line", figsize=(18, 6))
+plt.title("Change in Population of top 5 Populated Countries")
+plt.show()
