@@ -190,3 +190,103 @@ plt.show()
 df[df["Indicator Name"] == "Population, total"].drop("Indicator Name", axis=1).set_index("Country Name").sort_values("2021").tail(5).T.plot(kind="line", figsize=(18, 6))
 plt.title("Change in Population of top 5 Populated Countries")
 plt.show()
+
+
+# In[18]:
+
+
+df[df["Indicator Name"] == "Population, total"].drop("Indicator Name", axis=1).set_index("Country Name").sort_values("2021").tail(15).head(10).T.plot(kind="line", figsize=(18, 6))
+plt.title("Change in Population of top 10 Countries after top 5 Populated ones")
+plt.show()
+
+
+# # Clustering
+
+# In[19]:
+
+
+df_new = df.copy()
+
+
+# In[20]:
+
+
+from sklearn.preprocessing import LabelEncoder
+encoder = LabelEncoder()
+
+df_new["Indicator Name"] = encoder.fit_transform(df_new["Indicator Name"])
+
+
+# In[21]:
+
+
+# X = df_new.iloc[:, 32:]
+# X["Country"] = df_new["Country Name"]
+# X.set_index("Country", inplace=True)
+
+
+# In[22]:
+
+
+X = df[df["Indicator Name"] == "Renewable electricity output (% of total electricity output)"].set_index("Country Name").drop("Indicator Name", axis=1)
+
+
+# In[23]:
+
+
+from sklearn.datasets import make_blobs
+from sklearn.cluster import AgglomerativeClustering
+from scipy.cluster.hierarchy import dendrogram, linkage
+import matplotlib.pyplot as plt
+
+# Generate example data
+data, labels = make_blobs(n_samples=50, centers=3, random_state=0)
+
+# Perform hierarchical clustering
+agg_clustering = AgglomerativeClustering(n_clusters=3)
+agg_clustering.fit(X)
+
+# Create linkage matrix
+Z = linkage(X, method='ward')
+
+# Plot dendrogram
+plt.figure(figsize=(26, 7))
+dendrogram(Z, labels=X.index)
+plt.show()
+
+
+# In[24]:
+
+
+from sklearn.cluster import KMeans
+kmeans = KMeans(n_clusters=5)
+kmeans.fit(X)
+
+y_pred = kmeans.predict(X)
+
+
+# In[26]:
+
+
+X["cluster"] = y_pred
+
+
+# In[29]:
+
+
+X.cluster.value_counts().plot(kind="bar")
+
+
+# In[37]:
+
+
+ind_1 = X[X.cluster == 1].index[:10]
+ind_2 = X[X.cluster == 2].index[:10]
+ind_3 = X[X.cluster == 3].index[:10]
+ind_4 = X[X.cluster == 4].index[:10]
+
+
+# In[38]:
+
+
+pd.DataFrame({"CLuster 1": ind_1, "CLuster 2": ind_2, "CLuster 3": ind_3, "CLuster 4": ind_4})
